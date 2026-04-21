@@ -13,18 +13,47 @@ export default function Recipe({ categories, foods }) {
   return (
     <View style={styles.container}>
       <View testID="recipesDisplay">
-            
+            <Text style={styles.title}>Recipes</Text>
+            <View testID="RecipesDisplay">
+              <FlatList
+              data={foods}
+              keyExtractor={(item) => item.idFood}
+              renderItem={renderItem}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
+              showsVerticalScrollIndicator={false}
+              />
+            </View>
       </View>
     </View>
   );
 }
 
 const ArticleCard = ({ item, index, navigation }) => {
+//check if it is even to apply specific spacing
+const isEven =  index % 2 === 0;
+
   return (
+    
     <View
       style={[styles.cardContainer, { paddingLeft: 20, paddingRight: 15}]} testID="articleDisplay"
     >
-   
+   <TouchableOpacity
+   style={[styles.cardContainer, {paddingLeft: isEven ? 0 : 8, paddingRight:isEven ? 8 : 0}
+   ]}
+   testID="articleDisplay"
+   onPress={() => navigation.navigate("RecipeDetail",  {...item })}
+   >
+    <image 
+    source={{ uri: item.recipeImage}}
+    style={[styles.articleImage, {height: hp(25)}]}
+    />
+    <Text style={styles.articleText}>
+    {item.recipeName.length > 20 ? item.recipeName.slice(0,20) + "...": item.recipeName}
+    </Text>
+    <Text style={styles.articleDescription}>{item.recipeOrigin} </Text>
+
+   </TouchableOpacity>
     </View>
   );
 };
