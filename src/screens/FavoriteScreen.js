@@ -74,10 +74,28 @@ export default function FavoriteScreen() {
       >
         <Text style={{ color: "#fff" }}>Go back</Text>
       </Pressable>
+      <FlatList
+  data={favoriteRecipesList}
+  keyExtractor={(item) => item.idC}
+  renderItem={({ item }) => ( 
+    <Pressable 
+      onPress={() => navigation.navigate("RecipeDetail", { ...item })}
+    > <View style={styles.cardContainer}>
+      <Image source={{ uri: item.recipeImage }} /> 
+      <Text style={styles.recipeTitle}>
+        
+        {item.recipeName.length > 20 
+          ? item.recipeName.slice(0, 20) + "..." 
+          : item.recipeName}
+      </Text></View>
+    </Pressable>
+  )}
+/>
     
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   emptyContainer: {
