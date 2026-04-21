@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
+    Pressable,
   } from "react-native";
   import React from "react";
   import { useNavigation } from "@react-navigation/native"; // Import navigation
@@ -29,7 +30,7 @@ import {
           contentContainerStyle={styles.scrollContainer}
         >
           {/* Add "My Food" category */}
-          <TouchableOpacity
+          <Pressable
             onPress={() => navigation.navigate("MyFood")} // Navigate to "MyFood" screen
             style={styles.categoryContainer}
           >
@@ -40,8 +41,8 @@ import {
               />
             </View>
             <Text style={styles.categoryText}>My Food</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             onPress={() => navigation.navigate("FavoriteScreen")} // Navigate to "MyFood" screen
             style={styles.categoryContainer}
           >
@@ -52,7 +53,7 @@ import {
               />
             </View>
             <Text style={styles.categoryText}>My Favorites</Text>
-          </TouchableOpacity>
+          </Pressable>
   
           {categories.map((cat, index) => {
             let isActive = cat.strCategory == activeCategory;
@@ -60,7 +61,7 @@ import {
               ? styles.activeButton
               : styles.inactiveButton;
             return (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 onPress={() => handleChangeCategory(cat.strCategory)}
                 style={styles.categoryContainer}
@@ -72,7 +73,7 @@ import {
                   />
                 </View>
                 <Text style={styles.categoryText}>{cat.strCategory}</Text>
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </ScrollView>

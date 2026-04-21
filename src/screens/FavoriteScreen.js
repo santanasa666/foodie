@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -30,7 +31,7 @@ export default function FavoriteScreen() {
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>No favorite recipes yet!</Text>
         {/* add back button */}
-        <TouchableOpacity
+        <Pressable
           onPress={() => navigation.goBack()}
           style={{
             backgroundColor: "#2563EB",
@@ -42,7 +43,7 @@ export default function FavoriteScreen() {
           }}
         >
           <Text style={{ color: "#fff" }}>Go back</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     );
   }
@@ -59,7 +60,7 @@ export default function FavoriteScreen() {
         </Text>
       </View>
     
-      <TouchableOpacity
+      <Pressable
         onPress={() => navigation.goBack()}
         style={{
           backgroundColor: "#2563EB",
@@ -72,7 +73,7 @@ export default function FavoriteScreen() {
         }}
       >
         <Text style={{ color: "#fff" }}>Go back</Text>
-      </TouchableOpacity>
+      </Pressable>
     
     </>
   );

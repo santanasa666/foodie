@@ -1,4 +1,4 @@
-import {View,Text,ScrollView,TouchableOpacity,Image,StyleSheet,} from "react-native";
+import {View,Text,ScrollView,TouchableOpacity,Image,StyleSheet, Pressable,} from "react-native";
 import React from "react";
 import {
   widthPercentageToDP as wp,
@@ -7,11 +7,17 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux"; // Redux hooks
 import { toggleFavorite } from "../redux/favoritesSlice"; // Redux action
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { HeartIcon } from "react-native-heroicons/solid";
+// For outlined icons
+import { ChevronLeftIcon, ClockIcon, FireIcon, UsersIcon } from "react-native-heroicons/outline";
+
+// For solid icons (used for the filled heart)
+import { HeartIcon, PowerIcon, ScaleIcon } from "react-native-heroicons/solid";
 
 export default function RecipeDetailScreen(props) {
   const recipe = props.route.params; // recipe passed from previous screen
+  if(!recipe) {
+    return <Text>Loading...</Text>;
+  }
 
   const dispatch = useDispatch();
   const favoriterecipes = useSelector(
@@ -26,13 +32,14 @@ export default function RecipeDetailScreen(props) {
   const handleToggleFavorite = () => {
     dispatch(toggleFavorite(recipe)); // Dispatch the recipe to favorites
   };
-  const [isFavourite, setIsFavourite] = useState(false);
-
+  
+  
   return (
     <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollContent}
+      showsHorizontalScrollIndicator={false}
     >
       {/* recipe Image */}
       <View style={styles.imageContainer} testID="imageContainer">
@@ -41,22 +48,17 @@ export default function RecipeDetailScreen(props) {
       style={styles.recipeImage}
       />
       </View>
-      <View>
-        <TouchableOpacity onPress={navigation.goBack()} style={styles.backButton}>
-          <ChevronLeftIcon size={hp(3.5)} strokeWidth={4.5} color="fbbf24"  />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)} style={styles.favoriteButton}><HeartIcon size={hp(3.5)} strokeWidth={4.5} color={isFavourite ? "red" : "gray"} /></TouchableOpacity>
-      </View>
+      
 
       {/* Back Button and Favorite Button */}
       <View style={styles.topButtonsContainer}>
-        <TouchableOpacity
+        <Pressable
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Text>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+          <Text style={{fontSize:15}}>Back</Text>
+        </Pressable>
+        <Pressable
           onPress={handleToggleFavorite}
           style={[
             styles.favoriteButton,
@@ -65,8 +67,12 @@ export default function RecipeDetailScreen(props) {
             },
           ]}
         >
-          <Text>{isFavourite ? "♥" : "♡"}</Text>
-        </TouchableOpacity>
+          <HeartIcon 
+      size={hp(3.5)} 
+      strokeWidth={4.5} 
+      color={isFavourite ? "red" : "gray"} 
+    />
+        </Pressable>
       </View>
 
       {/* recipe Description */}
@@ -77,25 +83,44 @@ export default function RecipeDetailScreen(props) {
             style={styles.recipeDetailsContainer}
             testID="recipeDetailsContainer"
           >
-            <Text style={styles.recipeTitle} testID="recipeTitle">
-         
-              
+            <Text style={styles.recipeTitle} testID="recipeTitle">{recipe.recipeName}         
               </Text>
-            <Text style={styles.recipeCategory} testID="recipeCategory">
+            <Text style={styles.recipeCategory} testID="recipeCategory">{recipe.recipeCategory}
               </Text>
           </View>
           <View style={styles.miscContainer} testID="miscContainer">
-        
+        <View style={styles.miscItem} testID="miscItem">
+        <ClockIcon/>
+        <Text style={styles.miscText}>{recipe.time}</Text></View>
+        <View style={styles.miscItem} testID="miscItem">
+          <UsersIcon/>
+        <Text style={styles.miscText}>{recipe.servings}</Text></View>
+        <View style={styles.miscItem} testID="miscItem">
+          <FireIcon/>
+        <Text style={styles.miscText}>{recipe.calories}</Text></View>
+        <View style={styles.miscItem} testID="miscItem">
+          <ScaleIcon/>
+        <Text style={styles.miscText}>{recipe.difficulty}</Text></View>
       </View>
 
       {/* Ingredients */}
       <View style={styles.sectionContainer}>
-     
+        <Text style={styles.sectionTitle}>Ingredients</Text>
+      <View testID="ingredientsList" style={styles.ingredientsList}>
+        {recipe.ingredients.map((ingredient, index) => (
+          
+          <View key={index} style={styles.ingredientItem}>
+            <View style={styles.ingredientBullet}></View>
+            <Text style={styles.ingredientText}>{ingredient.ingredientName}</Text>
+            <Text style={styles.ingredientText}>{ingredient.ingredientMeasure}</Text>
+            </View>
+        ))}
+      </View>
       </View>
 
       {/* Instructions */}
       <View style={styles.sectionContainer} testID="sectionContainer">
-        
+        <Text style={styles.sectionTitle}>Instructions</Text><Text style={styles.instructionsText}>{recipe.recipeInstructions}</Text>
         </View>
           {/* Description */}
          
@@ -143,6 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     marginRight: wp(5),
+    
   },
 
   contentContainer: {

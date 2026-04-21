@@ -5,6 +5,7 @@ import {
     Image,
     StyleSheet,
     TouchableOpacity,
+    Pressable,
   } from "react-native";
   import React from "react";
   import { useNavigation, useRoute } from "@react-navigation/native";
@@ -57,18 +58,18 @@ import {
         <View
           style={styles.topButtonsContainer} testID="topButtonsContainer"
         >
-          <TouchableOpacity
+          <Pressable
             onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
             <Text>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             onPress={handleToggleFavorite}
             style={styles.favoriteButton}
           >
             <Text>{isFavourite ? "♥" : "♡"}</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
   
         {/* Recipe Details */}

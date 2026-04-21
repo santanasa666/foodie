@@ -6,6 +6,7 @@ import {
     Image,
     StyleSheet,
     ActivityIndicator,
+    Pressable,
   } from "react-native";
   import React, { useEffect, useState } from "react";
   import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -46,13 +47,13 @@ import {
     return (
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>{"Back"}</Text>
-        </TouchableOpacity>
+        </Pressable>
   
-        <TouchableOpacity onPress={handleAddrecipe} style={styles.addButton}>
+        <Pressable onPress={handleAddrecipe} style={styles.addButton}>
           <Text style={styles.addButtonText}>Add New recipe</Text>
-        </TouchableOpacity>
+        </Pressable>
   
         {loading ? (
           <ActivityIndicator size="large" color="#f59e0b" />
@@ -63,13 +64,13 @@ import {
             ) : (
               recipes.map((recipe, index) => (
                 <View key={index} style={styles.recipeCard} testID="recipeCard">
-                  <TouchableOpacity testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
+                  <Pressable testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
                   
                     <Text style={styles.recipeTitle}>{recipe.title}</Text>
                     <Text style={styles.recipeDescription} testID="recipeDescp">
                   
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
   
                   {/* Edit and Delete Buttons */}
                   <View style={styles.actionButtonsContainer} testID="editDeleteButtons">
@@ -134,10 +135,7 @@ import {
       padding: wp(3),
       borderRadius: 8,
       marginBottom: hp(2),
-      shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
+      boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
       elevation: 3, // for Android shadow
     },
     recipeImage: {
