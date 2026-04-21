@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, Image, StyleSheet, FlatList, TouchableOpacity, FlatListComponent } from "react-native";
 import React from "react";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp,} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
@@ -12,8 +12,16 @@ export default function Recipe({ categories, foods }) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Recipes</Text>
       <View testID="recipesDisplay">
-            
+            <FlatList 
+            data={foods}
+            keyExtractor={(item) => item.idFood}
+            renderItem={renderItem}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            showsVerticalScrollIndicator={false}
+            />
       </View>
     </View>
   );
@@ -24,7 +32,19 @@ const ArticleCard = ({ item, index, navigation }) => {
     <View
       style={[styles.cardContainer, { paddingLeft: 20, paddingRight: 15}]} testID="articleDisplay"
     >
-   
+   <TouchableOpacity
+   onPress={() => navigation.navigate("RecipeDetail", {...item})}>
+    <Image 
+    source={{uri: item.recipeImage}}
+    style={[styles.articleImage, {height: hp(25) }]}
+    />
+    <Text style={styles.articleText}>
+      {item.recipeName.length > 20 
+      ? item.recipeName.slice(0,20) + "..." 
+      : item.recipeName}
+    </Text>
+    <Text style={styles.articleDescription}>{item.recipeOrigin}</Text>
+   </TouchableOpacity>
     </View>
   );
 };

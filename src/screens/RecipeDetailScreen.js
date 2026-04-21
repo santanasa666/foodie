@@ -7,6 +7,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux"; // Redux hooks
 import { toggleFavorite } from "../redux/favoritesSlice"; // Redux action
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { HeartIcon } from "react-native-heroicons/solid";
 
 export default function RecipeDetailScreen(props) {
   const recipe = props.route.params; // recipe passed from previous screen
@@ -24,6 +26,7 @@ export default function RecipeDetailScreen(props) {
   const handleToggleFavorite = () => {
     dispatch(toggleFavorite(recipe)); // Dispatch the recipe to favorites
   };
+  const [isFavourite, setIsFavourite] = useState(false);
 
   return (
     <ScrollView
@@ -33,7 +36,16 @@ export default function RecipeDetailScreen(props) {
     >
       {/* recipe Image */}
       <View style={styles.imageContainer} testID="imageContainer">
-     
+      <Image 
+      source={recipe.recipeImage}
+      style={styles.recipeImage}
+      />
+      </View>
+      <View>
+        <TouchableOpacity onPress={navigation.goBack()} style={styles.backButton}>
+          <ChevronLeftIcon size={hp(3.5)} strokeWidth={4.5} color="fbbf24"  />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)} style={styles.favoriteButton}><HeartIcon size={hp(3.5)} strokeWidth={4.5} color={isFavourite ? "red" : "gray"} /></TouchableOpacity>
       </View>
 
       {/* Back Button and Favorite Button */}
