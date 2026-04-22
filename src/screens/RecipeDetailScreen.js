@@ -8,10 +8,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux"; // Redux hooks
 import { toggleFavorite } from "../redux/favoritesSlice"; // Redux action
 // For outlined icons
-import { ChevronLeftIcon, ClockIcon, FireIcon, UsersIcon } from "react-native-heroicons/outline";
 
-// For solid icons (used for the filled heart)
-import { HeartIcon, PowerIcon, ScaleIcon } from "react-native-heroicons/solid";
+
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function RecipeDetailScreen(props) {
   const recipe = props.route.params; // recipe passed from previous screen
@@ -67,11 +66,9 @@ export default function RecipeDetailScreen(props) {
             },
           ]}
         >
-          <HeartIcon 
-      size={hp(3.5)} 
-      strokeWidth={4.5} 
-      color={isFavourite ? "red" : "gray"} 
-    />
+          <FontAwesome name="heart" size={24} color={isFavourite ? "red" : "gray"} />
+       
+
         </Pressable>
       </View>
 
@@ -90,16 +87,16 @@ export default function RecipeDetailScreen(props) {
           </View>
           <View style={styles.miscContainer} testID="miscContainer">
         <View style={styles.miscItem} testID="miscItem">
-        <ClockIcon/>
+        <FontAwesome name="clock-o" size={24} color="black" />
         <Text style={styles.miscText}>{recipe.time}</Text></View>
         <View style={styles.miscItem} testID="miscItem">
-          <UsersIcon/>
+          <FontAwesome name="user" size={24} color="black" />
         <Text style={styles.miscText}>{recipe.servings}</Text></View>
         <View style={styles.miscItem} testID="miscItem">
-          <FireIcon/>
+          <FontAwesome name="fire" size={24} color="black" />
         <Text style={styles.miscText}>{recipe.calories}</Text></View>
         <View style={styles.miscItem} testID="miscItem">
-          <ScaleIcon/>
+          <FontAwesome name="battery-2" size={24} color="black" />
         <Text style={styles.miscText}>{recipe.difficulty}</Text></View>
       </View>
 

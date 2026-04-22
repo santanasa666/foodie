@@ -14,7 +14,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { TrashIcon } from "react-native-heroicons/solid";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { removeFromFavorites } from "../redux/favoritesSlice";
 
 export default function FavoriteScreen() {
@@ -99,7 +99,7 @@ export default function FavoriteScreen() {
                   ? item.recipeName.slice(0, 20) + "..."
                   : item.recipeName}
               </Text>
-              <Pressable onPress={ () => handleRemove(item.idFood)} style={styles.removeButton}><TrashIcon size={hp(3.5)} /></Pressable>
+              <Pressable onPress={ () => handleRemove(item.idFood)} style={styles.removeButton}><FontAwesome name="trash" size={24} color="black" /></Pressable>
               </View>
           </Pressable>
         )}
