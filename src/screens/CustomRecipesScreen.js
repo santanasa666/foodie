@@ -27,10 +27,6 @@ import {
     const favoriteRecipe = useSelector(
       (state) => state.favorites.favoriterecipes
     );
-    console.log('favoriteRecipe from custom',favoriteRecipe);
-    
-    const isFavourite = favoriteRecipe.includes(recipe.idCategory); // Adjust this according to your recipe structure
-  
     if (!recipe) {
       return (
         <View style={styles.container}>
@@ -38,6 +34,11 @@ import {
         </View>
       );
     }
+    console.log('favoriteRecipe from custom',favoriteRecipe);
+    
+    const isFavourite = favoriteRecipe.includes(recipe.idCategory); // Adjust this according to your recipe structure
+  
+    
   
     const handleToggleFavorite = () => {
       dispatch(toggleFavorite(recipe)); // Adjust the action to handle recipe

@@ -1,57 +1,84 @@
 import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    Image,
-    StyleSheet,
-    ActivityIndicator,
-    Pressable,
-  } from "react-native";
-  import React, { useEffect, useState } from "react";
-  import AsyncStorage from "@react-native-async-storage/async-storage";
-  import { useNavigation } from "@react-navigation/native";
-  import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from "react-native-responsive-screen";
-  
-  export default function MyRecipeScreen() {
-    const navigation = useNavigation();
-    const [recipes, setrecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      const fetchrecipes = async () => {
-        
-        };
-  
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// 1. IMPORT useIsFocused
+import { useNavigation, useIsFocused } from "@react-navigation/native"; 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+export default function MyRecipeScreen() {
+  const navigation = useNavigation();
+  // 2. DECLARE isFocused
+  const isFocused = useIsFocused(); 
+  const [recipes, setrecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 3. IMPLEMENT the fetching logic
+  const fetchrecipes = async () => {
+    try {
+      setLoading(true);
+      const storedRecipes = await AsyncStorage.getItem("customrecipes");
+      if (storedRecipes) {
+        setrecipes(JSON.parse(storedRecipes));
+      }
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 4. TRIGGER fetch when screen is focused
+  useEffect(() => {
+    if (isFocused) {
       fetchrecipes();
-    }, []);
-  
-    const handleAddrecipe = () => {
-      navigation.navigate("RecipesFormScreen");
-    };
-  
-    const handlerecipeClick = (recipe) => {
+    }
+  }, [isFocused]);
 
-    };
-    const deleterecipe = async (index) => {
-    
-    };
-  
-    const editrecipe = (recipe, index) => {
+  const handleAddrecipe = () => {
+    navigation.navigate("RecipesFormScreen");
+  };
 
-    };
-  
-    return (
+  const handlerecipeClick = (recipe) => {
+    navigation.navigate("CustomRecipesScreen", { recipe });
+  };
+
+  const deleterecipe = async (index) => {
+    try {
+      const updatedRecipes = [...recipes];
+      updatedRecipes.splice(index, 1);
+      setrecipes(updatedRecipes);
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(updatedRecipes));
+    } catch (error) {
+      console.log("Error deleting recipe:", error);
+    }
+  };
+
+  const editrecipe = (recipe, index) => {
+    navigation.navigate("RecipesFormScreen", {
+      recipeToEdit: recipe,
+      recipeIndex: index,
+      onrecipeEdited: fetchrecipes,
+    });
+  };
+
+  return (
     <View style={styles.container}>
-      {/* Header Container for better layout */}
       <View style={styles.headerContainer}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>← Back</Text>
         </Pressable>
-
         <Pressable onPress={handleAddrecipe} style={styles.addButton}>
           <Text style={styles.addButtonText}>+ Add Recipe</Text>
         </Pressable>
@@ -71,15 +98,16 @@ import {
           ) : (
             recipes.map((recipe, index) => (
               <View key={index} style={styles.recipeCard} testID="recipeCard">
-                <Pressable testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
+                <Pressable onPress={() => handlerecipeClick(recipe)}>
+                  <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
                   <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                  <Text style={styles.recipeDescription} testID="recipeDescp" numberOfLines={2}>
-                    {/* Assuming recipe description goes here */}
+                  <Text style={styles.recipeDescription} numberOfLines={2} testID="recipeDescp">
+                    {recipe.description?.length > 50
+                    ? `${recipe.description.substring(0,50)}...`
+                  : recipe.description}
                   </Text>
                 </Pressable>
-
-                {/* Edit and Delete Buttons */}
-                <View style={styles.actionButtonsContainer} testID="editDeleteButtons">
+                <View style={styles.actionButtonsContainer}>
                   <Pressable style={styles.editButton} onPress={() => editrecipe(recipe, index)}>
                     <Text style={styles.editButtonText}>Edit</Text>
                   </Pressable>
@@ -94,9 +122,9 @@ import {
       )}
     </View>
   );
-  }
-  
-  const styles = StyleSheet.create({
+}
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp(4),
@@ -160,7 +188,7 @@ import {
     elevation: 3, // For Android
   },
   recipeImage: {
-    width: "100%", 
+    width: "100%",
     height: hp(20), // Responsive height
     borderRadius: 8,
     marginBottom: hp(1.5),
@@ -207,4 +235,3 @@ import {
     fontSize: hp(1.8),
   },
 });
-  

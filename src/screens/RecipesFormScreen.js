@@ -14,29 +14,28 @@ export default function RecipesFormScreen({ route, navigation }) {
 
   const saverecipe = async () => {
     try {
-      //initialize new recipe object from state
       const newRecipe = { title, image, description };
 
+      //get current list
       const existingRecipes = await AsyncStorage.getItem("customrecipes");
-      let recipes = existingRecipes ? JSON.parse(existingRecipes) : [];
+      let recipesList = existingRecipes ? JSON.parse(existingRecipes) : [];
 
-      //update or add recipe
-      if (recipeToEdit) {
-        recipes[recipeIndex] = newRecipe;
+      // update existing or Add new
+      if (recipeToEdit && recipeIndex !== undefined) {
+        recipesList[recipeIndex] = newRecipe;
+      } else {
+        recipesList.push(newRecipe);
       }
+
+      // Save the updated array
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipesList));
+
+      // Refresh the previous screen and go back
       if (onrecipeEdited) {
         onrecipeEdited();
-      }else {
-        recipes.push(newRecipe);
       }
-
-      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipes));
-
       navigation.goBack();
-
-    }
-
-    catch(error) {
+    } catch (error) {
       console.log("Failed to save recipe", error);
     }
   };
@@ -66,6 +65,7 @@ export default function RecipesFormScreen({ route, navigation }) {
         value={description}
         onChangeText={setDescription}
         multiline={true}
+        rows={4}
         numberOfLines={4}
         style={[styles.input, { height: hp(20), textAlignVertical: "top" }]}
       />
