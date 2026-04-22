@@ -1,7 +1,8 @@
-import { View,Text,TextInput,TouchableOpacity,Image,StyleSheet, Pressable,} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Pressable, } from "react-native";
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {widthPercentageToDP as wp,heightPercentageToDP as hp,} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from "react-native-responsive-screen";
+
 
 export default function RecipesFormScreen({ route, navigation }) {
   const { recipeToEdit, recipeIndex, onrecipeEdited } = route.params || {};
@@ -12,11 +13,37 @@ export default function RecipesFormScreen({ route, navigation }) {
   );
 
   const saverecipe = async () => {
- 
+    try {
+      //initialize new recipe object from state
+      const newRecipe = { title, image, description };
+
+      const existingRecipes = await AsyncStorage.getItem("customrecipes");
+      let recipes = existingRecipes ? JSON.parse(existingRecipes) : [];
+
+      //update or add recipe
+      if (recipeToEdit) {
+        recipes[recipeIndex] = newRecipe;
+      }
+      if (onrecipeEdited) {
+        onrecipeEdited();
+      }else {
+        recipes.push(newRecipe);
+      }
+
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipes));
+
+      navigation.goBack();
+
+    }
+
+    catch(error) {
+      console.log("Failed to save recipe", error);
+    }
   };
 
   return (
     <View style={styles.container}>
+      
       <TextInput
         placeholder="Title"
         value={title}
@@ -42,9 +69,13 @@ export default function RecipesFormScreen({ route, navigation }) {
         numberOfLines={4}
         style={[styles.input, { height: hp(20), textAlignVertical: "top" }]}
       />
+      <View style={styles.containerButtons}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>Cancel</Text>
+      </Pressable>
       <Pressable onPress={saverecipe} style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save recipe</Text>
-      </Pressable>
+      </Pressable></View>
     </View>
   );
 }
@@ -53,6 +84,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: wp(4),
+  },
+  containerButtons:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignContent:"center",
+    padding: wp(2),
+
+  },
+  backButton: {
+    padding: wp(2),
+    backgroundColor:"#fafafa",
+    alignItems: "center",
+    borderRadius: 20,
+    marginTop: hp(2),
+  },
+  backButtonText: {
+    fontWeight:"bold",
   },
   input: {
     marginTop: hp(4),
@@ -63,7 +111,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 300,
-    height:200,
+    height: 200,
     margin: wp(2),
   },
   imagePlaceholder: {
@@ -78,10 +126,11 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: "#4F75FF",
-    padding: wp(.5),
+    padding: wp(2),
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: hp(2),
+    
   },
   saveButtonText: {
     color: "#fff",

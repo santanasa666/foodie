@@ -30,7 +30,7 @@ import {
     }, []);
   
     const handleAddrecipe = () => {
-
+      navigation.navigate("RecipesFormScreen");
     };
   
     const handlerecipeClick = (recipe) => {
@@ -45,144 +45,166 @@ import {
     };
   
     return (
-      <View style={styles.container}>
-        {/* Back Button */}
+    <View style={styles.container}>
+      {/* Header Container for better layout */}
+      <View style={styles.headerContainer}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>{"Back"}</Text>
+          <Text style={styles.backButtonText}>← Back</Text>
         </Pressable>
-  
+
         <Pressable onPress={handleAddrecipe} style={styles.addButton}>
-          <Text style={styles.addButtonText}>Add New recipe</Text>
+          <Text style={styles.addButtonText}>+ Add Recipe</Text>
         </Pressable>
-  
-        {loading ? (
-          <ActivityIndicator size="large" color="#f59e0b" />
-        ) : (
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            {recipes.length === 0 ? (
-              <Text style={styles.norecipesText}>No recipes added yet.</Text>
-            ) : (
-              recipes.map((recipe, index) => (
-                <View key={index} style={styles.recipeCard} testID="recipeCard">
-                  <Pressable testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
-                  
-                    <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                    <Text style={styles.recipeDescription} testID="recipeDescp">
-                  
-                    </Text>
-                  </Pressable>
-  
-                  {/* Edit and Delete Buttons */}
-                  <View style={styles.actionButtonsContainer} testID="editDeleteButtons">
-                    
-                
-                  </View>
-                </View>
-              ))
-            )}
-          </ScrollView>
-        )}
       </View>
-    );
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4F75FF" />
+        </View>
+      ) : (
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {recipes.length === 0 ? (
+            <Text style={styles.norecipesText}>No recipes added yet.</Text>
+          ) : (
+            recipes.map((recipe, index) => (
+              <View key={index} style={styles.recipeCard} testID="recipeCard">
+                <Pressable testID="handlerecipeBtn" onPress={() => handlerecipeClick(recipe)}>
+                  <Text style={styles.recipeTitle}>{recipe.title}</Text>
+                  <Text style={styles.recipeDescription} testID="recipeDescp" numberOfLines={2}>
+                    {/* Assuming recipe description goes here */}
+                  </Text>
+                </Pressable>
+
+                {/* Edit and Delete Buttons */}
+                <View style={styles.actionButtonsContainer} testID="editDeleteButtons">
+                  <Pressable style={styles.editButton} onPress={() => editrecipe(recipe, index)}>
+                    <Text style={styles.editButtonText}>Edit</Text>
+                  </Pressable>
+                  <Pressable style={styles.deleteButton} onPress={() => deleterecipe(index)}>
+                    <Text style={styles.deleteButtonText}>Delete</Text>
+                  </Pressable>
+                </View>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      )}
+    </View>
+  );
   }
   
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: wp(4),
-      backgroundColor: "#F9FAFB",
-    },
-    backButton: {
-      marginBottom: hp(1.5),
-    },
-    backButtonText: {
-      fontSize: hp(2.2),
-      color: "#4F75FF",
-    },
-    addButton: {
-      backgroundColor: "#4F75FF",
-      padding: wp(.7),
-      alignItems: "center",
-      borderRadius: 5,
-      width:300,
-     marginLeft:500
-      // marginBottom: hp(2),
-    },
-    addButtonText: {
-      color: "#fff",
-      fontWeight: "600",
-      fontSize: hp(2.2),
-    },
-    scrollContainer: {
-      paddingBottom: hp(2),
-      height:'auto',
-      display:'flex',
-      alignItems:'center',
-      justifyContent:'center',
-      flexDirection:'row',
-      flexWrap:'wrap'
-    },
-    norecipesText: {
-      textAlign: "center",
-      fontSize: hp(2),
-      color: "#6B7280",
-      marginTop: hp(5),
-    },
-    recipeCard: {
-      width: 400, // Make recipe card width more compact
-      height: 300, // Adjust the height of the card to fit content
-      backgroundColor: "#fff",
-      padding: wp(3),
-      borderRadius: 8,
-      marginBottom: hp(2),
-      boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
-      elevation: 3, // for Android shadow
-    },
-    recipeImage: {
-      width: 300, // Set width for recipe image
-      height: 150, // Adjust height of the image
-      borderRadius: 8,
-      marginBottom: hp(1),
-    },
-    recipeTitle: {
-      fontSize: hp(2),
-      fontWeight: "600",
-      color: "#111827",
-      marginBottom: hp(0.5),
-    },
-    recipeDescription: {
-      fontSize: hp(1.8),
-      color: "#6B7280",
-      marginBottom: hp(1.5),
-    },
-    actionButtonsContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginTop: hp(1),
-    },
-    editButton: {
-      backgroundColor: "#34D399",
-      padding: wp(.5),
-      borderRadius: 5,
-      width: 100, // Adjust width of buttons to be more compact
-      alignItems: "center",
-    },
-    editButtonText: {
-      color: "#fff",
-      fontWeight: "600",
-      fontSize: hp(1.8),
-    },
-    deleteButton: {
-      backgroundColor: "#EF4444",
-      padding: wp(.5),
-      borderRadius: 5,
-      width: 100, // Adjust width of buttons to be more compact
-      alignItems: "center",
-    },
-    deleteButtonText: {
-      color: "#fff",
-      fontWeight: "600",
-      fontSize: hp(1.8),
-    },
-  });
+  container: {
+    flex: 1,
+    paddingHorizontal: wp(4),
+    paddingTop: hp(2), // Give some breathing room from the top
+    backgroundColor: "#F9FAFB",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: hp(2),
+  },
+  backButton: {
+    paddingVertical: hp(1),
+    paddingRight: wp(4),
+  },
+  backButtonText: {
+    fontSize: hp(2),
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  addButton: {
+    backgroundColor: "#4F75FF",
+    paddingVertical: hp(1.2),
+    paddingHorizontal: wp(4),
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: hp(1.8),
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollContainer: {
+    paddingBottom: hp(4),
+    // Removed the flexWrap row layout to favor a clean single-column mobile list
+  },
+  norecipesText: {
+    textAlign: "center",
+    fontSize: hp(2),
+    color: "#9CA3AF",
+    marginTop: hp(10),
+  },
+  recipeCard: {
+    width: "100%", // Dynamically fits screen instead of hardcoded 400
+    backgroundColor: "#fff",
+    padding: wp(4),
+    borderRadius: 12,
+    marginBottom: hp(2),
+    // React Native proper shadow properties
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // For Android
+  },
+  recipeImage: {
+    width: "100%", 
+    height: hp(20), // Responsive height
+    borderRadius: 8,
+    marginBottom: hp(1.5),
+  },
+  recipeTitle: {
+    fontSize: hp(2.2),
+    fontWeight: "700",
+    color: "#1F2937",
+    marginBottom: hp(0.5),
+  },
+  recipeDescription: {
+    fontSize: hp(1.8),
+    color: "#6B7280",
+    marginBottom: hp(2),
+    lineHeight: hp(2.5),
+  },
+  actionButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: "auto", // Pushes buttons to the bottom of the card if content varies
+  },
+  editButton: {
+    backgroundColor: "#10B981", // Slightly tweaked green for better contrast
+    paddingVertical: hp(1.2),
+    borderRadius: 8,
+    width: "48%", // Flex-friendly width
+    alignItems: "center",
+  },
+  editButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: hp(1.8),
+  },
+  deleteButton: {
+    backgroundColor: "#EF4444",
+    paddingVertical: hp(1.2),
+    borderRadius: 8,
+    width: "48%", // Flex-friendly width
+    alignItems: "center",
+  },
+  deleteButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: hp(1.8),
+  },
+});
   

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -14,17 +14,27 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { TrashIcon } from "react-native-heroicons/solid";
+import { removeFromFavorites } from "../redux/favoritesSlice";
 
 export default function FavoriteScreen() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // Assuming you have a similar structure for recipes in your Redux store
   const favoriteRecipes = useSelector((state) => state.favorites);
   const favoriteRecipesList = favoriteRecipes?.favoriterecipes || [];
+  
+  const handleRemove = (recipeId) => {
+    
+    dispatch(removeFromFavorites({id: recipeId}));
+    console.log("Removing recipe with ID:", recipeId);
+  };
+
   console.log(favoriteRecipes.favoriterecipes);
-  console.log('favoriteRecipesList',favoriteRecipesList);
-  
-  
+  console.log('favoriteRecipesList', favoriteRecipesList);
+
+
 
   if (favoriteRecipesList.length === 0) {
     return (
@@ -59,7 +69,7 @@ export default function FavoriteScreen() {
           My Favorite Recipes
         </Text>
       </View>
-    
+
       <Pressable
         onPress={() => navigation.goBack()}
         style={{
@@ -67,6 +77,7 @@ export default function FavoriteScreen() {
           padding: 10,
           borderRadius: 5,
           marginTop: 10,
+          marginBottom:20,
           width: 100,
           alignItems: "center",
           marginLeft: 20,
@@ -75,23 +86,25 @@ export default function FavoriteScreen() {
         <Text style={{ color: "#fff" }}>Go back</Text>
       </Pressable>
       <FlatList
-  data={favoriteRecipesList}
-  keyExtractor={(item) => item.idC}
-  renderItem={({ item }) => ( 
-    <Pressable 
-      onPress={() => navigation.navigate("RecipeDetail", { ...item })}
-    > <View style={styles.cardContainer}>
-      <Image source={{ uri: item.recipeImage }} /> 
-      <Text style={styles.recipeTitle}>
-        
-        {item.recipeName.length > 20 
-          ? item.recipeName.slice(0, 20) + "..." 
-          : item.recipeName}
-      </Text></View>
-    </Pressable>
-  )}
-/>
-    
+        data={favoriteRecipesList}
+        keyExtractor={(item) => item.idC}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => navigation.navigate("RecipeDetail", { ...item })}
+          > <View style={styles.cardContainer}>
+              <Image source={{ uri: item.recipeImage }} style={styles.recipeImage} />
+              <Text style={styles.recipeTitle}>
+
+                {item.recipeName.length > 20
+                  ? item.recipeName.slice(0, 20) + "..."
+                  : item.recipeName}
+              </Text>
+              <Pressable onPress={ () => handleRemove(item.idFood)} style={styles.removeButton}><TrashIcon size={hp(3.5)} /></Pressable>
+              </View>
+          </Pressable>
+        )}
+      />
+
     </>
   );
 }
@@ -123,6 +136,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   recipeImage: {
     width: wp(20),

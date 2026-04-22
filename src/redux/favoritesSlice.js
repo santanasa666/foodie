@@ -24,9 +24,16 @@ const favoritesSlice = createSlice({
         state.favoriterecipes.push(recipe);
       }
     },
+
+    removeFromFavorites: (state, action) => {
+      // Filter out the recipe that matches the ID sent in the payload
+      state.favoriterecipes = state.favoriterecipes.filter(
+        (recipe) => recipe.idFood !== action.payload.id
+      );
+    },
    
   },
 });
 
-export const { toggleFavorite } = favoritesSlice.actions;
+export const { toggleFavorite, removeFromFavorites } = favoritesSlice.actions;
 export default favoritesSlice.reducer;
