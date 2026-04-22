@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "recipeApplication",
-    "slug": "recipeApplication",
+    "slug": "foodrecipes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9e340829-292f-4270-942d-a34c07744be3"
+      }
+    },
+    "owner": "nutsella666"
   }
 }
