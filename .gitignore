@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3ed9005f510b33f120a10e21b05998e51ffc78fb
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
@@ -34,6 +37,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+<<<<<<< HEAD
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -165,3 +169,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 >>>>>>> 1f676d0 (Initial commit)
+=======
+>>>>>>> 3ed9005f510b33f120a10e21b05998e51ffc78fb
